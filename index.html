@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Example React UDM path prefix</title>
+    <!-- react and jquery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://npmcdn.com/react-router/umd/ReactRouter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  </head>
+  <body>
+    <div id="demo-app"></div>
+    <script type="text/babel">
+      // the following window assignments is only neccessary so we can use the UDM version of react-router
+      // https://github.com/reactjs/react-router
+      window.Router = ReactRouter.Router;
+      window.Route = ReactRouter.Route;
+      window.Link = ReactRouter.Link;
+      window.Redirect = ReactRouter.Redirect;
+      window.IndexRoute = ReactRouter.IndexRoute;
+      window.browserHistory = ReactRouter.browserHistory;
+      window.useRouterHistory = ReactRouter.useRouterHistory;
+      window.createHistory = ReactRouter.createHistory;
+      // end UDM
+
+
+      const App = React.createClass({
+        render() {
+          return (
+            <div>
+              <nav>
+                <ul>
+                  <li><Link to="/">home</Link></li>
+                  <li><Link to="about">about</Link></li>
+                </ul>
+              </nav>
+              <div className="container">
+                <div className="row">
+                  <div className="col-md-12">
+                    {this.props.children}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )
+        }
+      });
+
+      const About = React.createClass({
+        render: function(){
+          return(
+            <div>
+              <h1>About Page</h1>
+              <p>Can we get urls to work here</p>
+            </div>
+          );
+        }
+      });
+
+      const Home = React.createClass({
+        render: function(){
+          return(
+            <div>
+              <h1>Home Page</h1>
+              <p>Can we get urls to work here</p>
+            </div>
+          );
+        }
+      });
+
+      const NoMatch = React.createClass({
+        render: function(){
+          return(
+            <div>
+              <h1>404 Page</h1>
+              <p>Can we get urls to work here</p>
+            </div>
+          );
+        }
+      });
+
+      const browserHistory = useRouterHistory(createHistory)({
+        basename: '/react-router-bug/' //ideally this would be dynamic, e.g. `window.location.pathname`
+      });
+
+      ReactDOM.render((
+        <Router history={browserHistory}>
+          <Route path="/" component={App}>
+            <IndexRoute component={Home} />
+            <Route path="about" component={About}/>
+            <Route path="*" component={NoMatch}/>
+          </Route>
+        </Router>
+      ), document.getElementById('demo-app'))
+    </script>
+  </body>
+</html>
+
